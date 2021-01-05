@@ -1,0 +1,23 @@
+{% extends "csv_generator/base.html" %}
+{% block content %}
+<div class="container">
+    <div class="position-relative">
+        <h2 class="mt-4">Data Schemas</h2>
+        <div class="position-absolute top-0 end-0"><a class="btn btn-dark btn" href="{% url 'new-data-schema' %}">New Schema</a></div>
+        <div class="row align-items-center">
+            <div class="col">#</div>
+            <div class="col">Title</div>
+            <div class="col">Modified</div>
+            <div class="col">Actions</div>
+        </div>
+        {% for schema in schemas %}
+        <div class="row align-items-center">
+            <div class="col">{{schema.pos}}</div>
+            <div class="col"><a href = "{% url 'data-sets' schema.id %}">{{schema.name}}</a></div>
+            <div class="col">{{schema.last_change}}</div>
+            <div class="col"><a class="btn btn-outline-dark btn-sm" href="{% url 'data-schema' schema.id %}">Edit schema</a><form method="POST">{% csrf_token %}<button type="submit" class="btn btn-outline-danger btn-sm" name="del" value="{{schema.id}}">Delete</button></form></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

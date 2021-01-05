@@ -1,0 +1,55 @@
+{% extends "csv_generator/base.html" %}
+{% block content %}
+<div class="container">
+    <div class="position-relative">
+        <h2 class="mt-4">Data Sets for <b class='text-danger'>{{ name }}</b> schema</h2>
+
+        <form class="form-inline" method = "post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-2">
+                    <input type="number" min="1" class="form-control" id="inputPassword2" placeholder="Rows" name = "rows">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-success mb-2">Generate data</button>
+                </div>
+            </div>
+        </form>
+        <div class="row align-items-center">
+            <div class="col">Rows</div>
+            <div class="col">Created</div>
+            <div class="col">Status</div>
+            <div class="col">Actions</div>
+        </div>
+        {% for set in sets %}
+        <div class="row align-items-center">
+            <div class="col">{{set.rows}}</div>
+            <div class="col">{{set.date}}</div>
+            {% if set.status == 'PROCESSING' %}
+            <div class="col bg-secondary" id ="{{set.id}}">{{set.status}}</div>
+            {% else %}
+            <div class="col bg-success" id ="{{set.id}}">{{set.status}}</div>
+            {% endif %}
+            <div class="col"><a id = "h{{set.id}}" class="btn btn-success mb-2" href="{{set.file.url}}">Download</a></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if last_object %}
+<script>
+    var url = "{% url 'progress' last_object.task_id %}"
+
+    function status() {
+        $.getJSON(url, function(data) { document.getElementById("{{last_object.id}}").innerHTML = data[0].status;
+        if(data[0].status === 'SUCCESS'){
+            document.getElementById("{{last_object.id}}").className = "col bg-success";
+            document.getElementById("h{{last_object.id}}").href = "/media/data_set_{{last_object.id}}.csv";
+        } });
+    }
+    setInterval(status, 1500);
+    </script> 
+{% endif %}
+     
+{% endblock content %}

@@ -1,0 +1,141 @@
+{% extends "csv_generator/base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="position-relative">
+            <h2 class="mt-4">Data Schema Editor</h2>
+            <input type="hidden" name="form" value="old">
+            <div class="container">
+                <div class="row mb-3">
+                    <div class='col-4'>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Name</label>
+                            <input type="text" class="form-control" id="name" name="schema_name" maxlength="50" value="{{schema.name}}">
+                        </div>
+                    </div>
+                    <div class='col-8'>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class='col-4'>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">Column separator</label>
+                            <select class="form-control" id="column_separator" name="column_separator">
+                                <option>{{schema.column_separator}}</option>
+                                {% for option in options2 %}
+                                {% if option != schema.column_separator %}
+                                <option>{{option}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class='col-8'>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class='col-4'>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">String character</label>
+                            <select class="form-control" id="string_character" name="string_character">
+                                <option>{{schema.string_character}}</option>
+                                {% for option in options3 %}
+                                {% if option != schema.string_character %}
+                                <option>{{option}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class='col-8'>
+                    </div>
+                </div>
+                <h2 class="mt-4">Schema Columns</h2>
+                {% for column in columns %}
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="name">Column name</label>
+                            <input type="text" class="form-control" id="name" maxlength="50" name="name{{column.id}}" value="{{column.name}}">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">Type</label>
+                            <select class="form-control" id="exampleFormControlSelect2" name="type{{column.id}}">
+                                <option>{{column.column_type}}</option>
+                                {% for option in options %}
+                                {% if option != column.column_type %}
+                                <option>{{option}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% if column.range_supported %}
+                    <div class="col-sm-1"><label for="exampleFormControlSelect2">From</label><input type="number" min="0" name="start{{column.id}}" value = "{{column.start_value}}" class="form-control mx-sm-3" aria-describedby="passwordHelpInline"></div>
+                    <div class="col-sm-1"><label for="exampleFormControlSelect2">To</label><input type="number" min="1" name = "end{{column.id}}" value="{{column.end_value}}" class="form-control mx-sm-3" aria-describedby="passwordHelpInline"></div>
+                    {% else %}
+                    <div class="col-sm-2"></div>
+                    {% endif %}
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Order</label>
+                            <input type="number" class="form-control" id="order" min="0" max="1000" name="order{{column.id}}" value="{{column.order}}">
+                        </div>
+                    </div>
+                    <div class="col"><button class="btn btn-outline-danger btn-sm" name="form" value="del{{column.id}}">Delete</button></div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="position-absolute top-0 end-0"><button class="btn btn-dark btn">Submit</button></div>
+    </form>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="form" value="new">
+        <fieldset class="form-group">
+            <div class='container bord'>
+                <div class="position-relative ">
+                    <div class="row align-items-center border border-dark">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="name">Column name</label>
+                                <input type="text" class="form-control" name="name" id="id_name">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect2">Type</label>
+                                <select class="form-control" id="id_column_type" name="column_type">
+                                    <option>Full name</option>
+                                    <option>Job</option>
+                                    <option>Email</option>
+                                    <option>Domain name</option>
+                                    <option>Phone number</option>
+                                    <option>Company name</option>
+                                    <option>Text</option>
+                                    <option>Integer</option>
+                                    <option>Address</option>
+                                    <option>Date</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Order</label>
+                                <input type="number" class="form-control" id="id_order" name="order" min="0">
+                            </div>
+                        </div>
+                        <span class="text-muted">this is new column</span>
+                    </div>
+                    <div class="butt"><button class="btn btn-dark btn-sm">Add column</button></div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+</div>
+{% endblock content %}
