@@ -45,7 +45,7 @@
         $.getJSON(url, function(data) { document.getElementById("{{last_object.id}}").innerHTML = data[0].status;
         if(data[0].status === 'SUCCESS'){
             document.getElementById("{{last_object.id}}").className = "col bg-success";
-            document.getElementById("h{{last_object.id}}").href = "/media/data_set_{{last_object.id}}.csv";
+            window.location.href = window.location.href;
         } });
     }
     setInterval(status, 1500);
