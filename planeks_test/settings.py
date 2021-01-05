@@ -27,7 +27,7 @@ SECRET_KEY = 'sf%0zbm48(*o9t^m0dkd7j7#o!)xmt_j*o3py5toe%ihs&kn)m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['planekstesttask.herokuapp.com']
+ALLOWED_HOSTS = ['planekstesttask.herokuapp.com','127.0.0.1']
 
 
 # Application definition

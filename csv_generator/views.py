@@ -116,6 +116,7 @@ def data_sets(request, pk):
 					'last_object':''}
 			if request.POST.get('rows'):
 				data_set = DataSet(status='PROCESSING', parent = DataSchema.objects.filter(id = pk).first(), rows = request.POST.get('rows'))
+				data_set.file = 'data_set_{}.csv'.format(data_set.id)
 				data_set.save()
 				data_set.task_id = fake_csv(request.POST.get('rows'), pk, data_set.id)
 				data_set.save()	

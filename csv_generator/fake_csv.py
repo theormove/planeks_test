@@ -4,6 +4,10 @@ import random
 import time
 from celery import shared_task
 import csv
+from django.conf import settings
+import os
+import boto3
+
 
 dummy_data = {
 				'Full name':['Ivan Ivanov', 'Pavel Durov','Elon Musk'],
@@ -49,7 +53,7 @@ def fake_csv(row_number, schema_id, set_id):
 
 @shared_task(bind=True)
 def random_csv(self, columns, header, row_number, dummy_data, set_id, chars):
-	with open(settings.MEDIA_ROOT + '/data_set_{}.csv'.format(set_id), 'w') as csvfile:
+	with open('data_set_{}'.format(set_id), 'w') as csvfile:
 		writer = csv.writer(csvfile, delimiter = chars[0], quotechar = chars[1])
 		writer.writerow(header)
 		for i in range(int(row_number)):
@@ -81,8 +85,9 @@ def random_csv(self, columns, header, row_number, dummy_data, set_id, chars):
 
 				
 			writer.writerow(row)
-		data_set = DataSet.objects.filter(id = set_id).first()
-		data_set.file = '/data_set_{}.csv'.format(set_id)
+		data_set = DataSet.objects.filter(id = set_id).first()	
 		data_set.status = 'SUCCESS'
+		client = boto3.client('s3', aws_access_key_id = settings.AWS_ACCESS_KEY_ID, aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY )
+		client.upload_file('data_set_{}'.format(set_id), 'planeks-test-files','data_set_{}'.format(set_id))
 		data_set.save()					
 			
