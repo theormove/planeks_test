@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'sf%0zbm48(*o9t^m0dkd7j7#o!)xmt_j*o3py5toe%ihs&kn)m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['planekstesttask.herokuapp.com']
 
 
 # Application definition
@@ -127,6 +127,9 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+
 
 LOGIN_REDIRECT_URL = 'data-schemas'
 
